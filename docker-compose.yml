@@ -1,0 +1,76 @@
+version: "1"
+
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: attendance
+    volumes:
+      - ./db:/var/lib/postgresql/data
+      - ./docker-compose/pgsql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d attendance"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    container_name: db
+    networks:
+      - attendance-network
+
+  register:
+    image: register
+    build:
+      context: register
+      dockerfile: Dockerfile
+    container_name: register
+    ports:
+      - "8081:8080"
+    networks:
+      - attendance-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/attendance
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      db:
+        condition: service_healthy
+
+  attendance:
+    image: attendance
+    build:
+      context: attendance
+      dockerfile: Dockerfile
+    container_name: attendance
+    ports:
+      - "8082:8080"
+    networks:
+      - attendance-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/attendance
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      db:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    container_name: campaign-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    depends_on:
+      - register
+      - attendance
+    networks:
+      - attendance-network
+
+networks:
+  attendance-network:
+    driver: bridge
