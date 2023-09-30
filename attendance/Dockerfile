@@ -1,7 +1,10 @@
-FROM maven:3.6.3-jdk-8
+FROM maven:3.6.3-jdk-8 AS MAVEN_BUILD
+RUN mkdir /app
+COPY ./ /app
+RUN echo "Building app..." && cd /app && mvn clean package -DskipTests
+
+FROM openjdk:8-jdk-alpine
 WORKDIR /app
-COPY . .
-RUN mvn clean package -DskipTests
-RUN mv target/attendance-0.0.1-SNAPSHOT.war attendance.war
+COPY --from=MAVEN_BUILD /app/target/attendance-0.0.1-SNAPSHOT.war /app/attendance.war
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","attendance.war"]
+CMD ["java", "-jar", "register.war"]
