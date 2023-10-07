@@ -2,6 +2,8 @@ package com.register.controllers;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,14 +25,14 @@ public class EmployeeController {
 
   private final IEmployeeRepository _employeeRepository;
 
-  @PostMapping("/save")
-  public void save(@RequestBody EmployeeDto employeeDto) {
-      _employeeRepository.save(employeeDto);
+  @PostMapping
+  public ResponseEntity<Employee> save(@RequestBody EmployeeDto employeeDto) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(_employeeRepository.save(employeeDto));
   }
 
   @GetMapping
-  public List<Employee> getAllEmployees(){
-    return _employeeRepository.findAll();
+  public ResponseEntity<List<Employee>> getAllEmployees(){
+    return ResponseEntity.ok(_employeeRepository.findAll());
   }
 
 }

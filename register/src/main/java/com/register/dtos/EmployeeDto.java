@@ -10,6 +10,6 @@ public class EmployeeDto {
   private String id;
   private String name;
   private String photo;
-  private long customerId;
+  // private long customerId;
 
 }

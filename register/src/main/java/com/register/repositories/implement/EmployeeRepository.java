@@ -27,8 +27,8 @@ public class EmployeeRepository implements IEmployeeRepository{
     Employee employee = _employeeContext.save(new Employee(0, employeeDto.getId(), 
     employeeDto.getName(), ""));
     
-    _assignmentRepository.save(new Assignment(0, employeeDto.getCustomerId(), 
-      employee.getEmployeeId(),new Timestamp(System.currentTimeMillis()),null));
+    // _assignmentRepository.save(new Assignment(0, employeeDto.getCustomerId(), 
+    //   employee.getEmployeeId(),new Timestamp(System.currentTimeMillis()),null));
 
     return employee;
   }

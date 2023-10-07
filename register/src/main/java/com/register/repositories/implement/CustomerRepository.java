@@ -19,8 +19,7 @@ public class CustomerRepository implements ICustomerRepository {
 
     @Override
     public Customer save(Customer customer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+       return _customerContext.save(customer);
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.attendance.controllers;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +26,10 @@ public class AttendanceController {
   private final AttendanceServices _attendanceServices;
 
 
-  @PostMapping("/save")
-  public String save(@RequestBody AttendanceDto attendanceDto) {
-      return _attendanceServices.save(attendanceDto);
+  @PostMapping
+  public ResponseEntity<String> save(@RequestBody AttendanceDto attendanceDto) {
+      _attendanceServices.save(attendanceDto);
+      return ResponseEntity.status(HttpStatus.CREATED).body("Attendance saved");
   }
 
   @GetMapping

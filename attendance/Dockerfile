@@ -7,4 +7,4 @@ FROM openjdk:8-jdk-alpine
 WORKDIR /app
 COPY --from=MAVEN_BUILD /app/target/attendance-0.0.1-SNAPSHOT.war /app/attendance.war
 EXPOSE 8080
-CMD ["java", "-jar", "register.war"]
+CMD ["java", "-jar", "attendance.war"]

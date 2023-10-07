@@ -65,7 +65,7 @@ services:
       - "80:80"
     volumes:
       - ./docker-compose/nginx:/etc/nginx/conf.d/
-      - ./attendance-fr/dist:/var/www/ui
+      - ./front-attendance/dist:/var/www/ui
     depends_on:
       - register
       - attendance
